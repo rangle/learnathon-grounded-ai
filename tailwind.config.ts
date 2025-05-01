@@ -1,10 +1,11 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
+import typography from '@tailwindcss/typography';
 
-export default {
+const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -21,8 +22,8 @@ export default {
           800: '#075985',
           900: '#0c4a6e',
         },
-        background: "#ffffff",
-        foreground: "#0f172a",
+        background: '#ffffff',
+        foreground: '#0f172a',
       },
       spacing: {
         '18': '4.5rem',
@@ -30,25 +31,27 @@ export default {
         '128': '32rem',
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
       },
       animation: {
-        'gradient': 'gradient 15s ease infinite',
+        gradient: 'gradient 15s ease infinite',
         'bounce-slow': 'bounce 3s infinite',
       },
       keyframes: {
         gradient: {
           '0%, 100%': {
             'background-size': '200% 200%',
-            'background-position': 'left center'
+            'background-position': 'left center',
           },
           '50%': {
             'background-size': '200% 200%',
-            'background-position': 'right center'
+            'background-position': 'right center',
           },
         },
       },
     },
   },
-  plugins: [],
-} satisfies Config;
+  plugins: [typography],
+};
+
+export default config;
