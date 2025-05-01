@@ -25,7 +25,7 @@ You will need to supply:
 1. **Clone the repository:**
 
    ```bash
-   git clone <repository-url>
+   git clone [https://github.com/rangle/learnathon-grounded-ai](https://github.com/rangle/learnathon-grounded-ai).
    cd grounded-qa-chatbot-v2
    ```
 
