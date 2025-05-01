@@ -26,7 +26,7 @@ You will need to supply:
 
    ```bash
    git clone https://github.com/rangle/learnathon-grounded-ai
-   cd grounded-qa-chatbot-v2
+   cd learnathon-grounded-ai
    ```
 
 2. **Install dependencies:**
