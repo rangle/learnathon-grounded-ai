@@ -18,7 +18,12 @@ This Next.js project demonstrates a simple Retrieval-Augmented Generation (RAG) 
 
 You will need to supply:
 
-- `GOOGLE_API_KEY` – Your Google Gemini API key.
+- `GOOGLE_API_KEY` – A Google Gemini API key. To obtain one:
+  1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
+  2. Sign in with your Google account
+  3. Click "Create an API key"
+  4. Select the "Gemini API" project
+  5. Click "Create API key"
 
 ## Setup
 
