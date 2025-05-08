@@ -97,7 +97,7 @@ learnathon-grounded-ai/
 
 Even though the core functionality is in place, here are a few creative tasks to explore:
 
-- **Customize Prompts:** Modify any prompt construction logic (potentially within API routes or `lib/utils.ts`) to adjust tone, style, or structure.
+- **Customize Prompts:** Modify any prompt construction logic (potentially within API routes or `lib/llm.ts`) to adjust tone, style, or structure.
 - **UI Enhancements:** Add a toggle button in the UI (in `app/page.tsx`) to show/hide raw search results.
 - **Additional Tool Integration:** Experiment by wiring up another tool (e.g., a simple weather converter) to demonstrate multi-step interactions in a RAG workflow.
 
