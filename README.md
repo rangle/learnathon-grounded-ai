@@ -1,12 +1,10 @@
 # Grounded Q&A Chatbot v2
 
-This Next.js project demonstrates a simple Retrieval-Augmented Generation (RAG) chatbot built using the Next.js App Router and the Vercel AI SDK. It’s designed to get you up and running quickly (in about one hour) so that you can focus on exploring modern RAG, AI, and LLM practices—without spending too much time on environment setup.
+This Next.js project demonstrates a simple Retrieval-Augmented Generation (RAG) chatbot built using the Next.js App Router and the Vercel AI SDK. It's designed to get you up and running quickly (in about one hour) so that you can focus on exploring modern RAG, AI, and LLM practices—without spending too much time on environment setup.
 
 **What It Does:**
 
-- **Retrieval:** When a user submits a query, the app calls Google’s grounding API to fetch relevant search results.
-- **Prompt Construction:** It then uses these results to build a context prompt.
-- **Generation:** This prompt (combined with the user query) is sent to an LLM via the Vercel AI SDK, which generates a grounded answer.
+- **Grounded Generation:** When a user submits a query, the app leverages the Vercel AI SDK with Google's Gemini model, configured for search grounding. This allows the LLM to access and incorporate relevant information from Google Search into its response. The initial prompt guides the LLM's task.
 - **Display:** Both the final answer and the raw search results are shown in the UI, sparking creative discussion and exploration of additional utilities.
 
 > **Note:** No separate API key is needed for the Vercel AI SDK—the only key required is the Google API key.
@@ -18,7 +16,7 @@ This Next.js project demonstrates a simple Retrieval-Augmented Generation (RAG) 
 
 You will need to supply:
 
-- `GOOGLE_API_KEY` – A Google Gemini API key. To obtain one:
+- `GOOGLE_GENERATIVE_AI_API_KEY` – A Google Gemini API key. To obtain one:
   1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
   2. Sign in with your Google account
   3. Click "Create an API key"
@@ -59,44 +57,48 @@ You will need to supply:
 ## Project Structure
 
 ```
-grounded-qa-chatbot-v2/
+learnathon-grounded-ai/
+├── app/
+│   ├── api/chat/route.ts // Handles POST requests for chat, calls llm.ts
+│   ├── lib/
+│   │   └── llm.ts          // Handles LLM interactions via Vercel AI SDK
+│   ├── layout.tsx        // Global layout (client component)
+│   └── page.tsx          // Main chat interface (client component)
+├── components/           // UI components
+├── lib/
+│   └── utils.ts          // General utility functions
+├── public/               // Static assets
 ├── package.json
 ├── tsconfig.json
 ├── README.md
-└── src
-    └── app
-         ├── layout.tsx        // Global layout (client component)
-         └── page.tsx          // Main chat interface (client component)
-    └── lib
-         ├── retrieval.ts     // Retrieves search results from Google's grounding API (or returns dummy data)
-         ├── llm.ts           // Calls the LLM via the Vercel AI SDK to generate an answer
-         └── prompt.ts        // Constructs a context prompt from the search results
+// ... (other root files like next.config.ts, tailwind.config.ts etc.)
 ```
 
 ## How It Works
 
-1. **User Interface (`src/app/page.tsx`):**  
-   A React-based page where users enter their query. On submission, the page sends the query to our API route.
+1. **User Interface (`app/page.tsx`):**
+   A React-based page where users enter their query. On submission, the page sends the query to an API route (e.g., `app/api/chat/route.ts`).
 
-2. **API Route (Next.js App Router in `src/app/api/chat/route.ts`):**  
-   The API route:
+2. **API Route (`app/api/chat/route.ts`):**
+   This Next.js App Router route handler defines the backend endpoint for the chat functionality.
+   - **Path:** `app/api/chat/route.ts`
+   - **Method:** `POST`
+   - **Functionality:**
+     - Receives the user's query from the request body.
+     - Utilizes the `generateAnswer` function from `app/lib/llm.ts` to get a response from the LLM, including any grounding metadata.
+     - Returns the generated answer and grounding metadata as a JSON response.
+     - Includes basic input validation and error handling.
 
-   - Retrieves grounding results using the Google API (via `lib/retrieval.ts`).
-   - Constructs a context string using `lib/prompt.ts`.
-   - Calls the LLM (via `lib/llm.ts`) to generate a final answer.
-   - Returns the answer along with the raw search results.
-
-3. **RAG Modules (`src/lib/`):**
-   - **retrieval.ts:** Fetches search results from Google’s grounding API (or returns dummy data if unavailable).
-   - **prompt.ts:** Builds a context string using immutable array methods.
-   - **llm.ts:** Sends the combined prompt to the LLM using the Vercel AI SDK and returns the generated answer.
+3. **Core Logic & Utility Modules:**
+   - **`app/lib/llm.ts`:** Manages interactions with the Large Language Model (LLM) using the Vercel AI SDK and Google Generative AI. It's responsible for sending prompts, receiving generated text, and handling LLM-specific errors. It may include features like search grounding.
+   - **`lib/utils.ts`:** Contains general-purpose helper functions and utilities that support various parts of the application's backend or frontend logic.
 
 ## Creative Challenges
 
 Even though the core functionality is in place, here are a few creative tasks to explore:
 
-- **Customize the Prompt:** Modify the prompt construction in `src/lib/prompt.ts` to adjust tone, style, or structure.
-- **UI Enhancements:** Add a toggle button in the UI (in `src/app/page.tsx`) to show/hide raw search results.
+- **Customize Prompts:** Modify any prompt construction logic (potentially within API routes or `lib/utils.ts`) to adjust tone, style, or structure.
+- **UI Enhancements:** Add a toggle button in the UI (in `app/page.tsx`) to show/hide raw search results.
 - **Additional Tool Integration:** Experiment by wiring up another tool (e.g., a simple weather converter) to demonstrate multi-step interactions in a RAG workflow.
 
 ## Where to Next?

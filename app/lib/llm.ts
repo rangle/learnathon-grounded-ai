@@ -31,7 +31,7 @@ class AIGenerationError extends LLMError {
  * @throws {InvalidInputError} If the query is invalid
  * @throws {AIGenerationError} If there's an error generating the response
  */
-export async function generateAnswer(query: string): Promise<{ answer: string; groundingMetadata?: any }> {
+export async function generateAnswer(query: string): Promise<{ answer: string; groundingMetadata?: unknown }> {
   // Input validation
   if (!query || query.trim().length === 0) {
     throw new InvalidInputError('Query cannot be empty');
@@ -63,6 +63,7 @@ export async function generateAnswer(query: string): Promise<{ answer: string; g
     const groundingMetadata = metadata?.groundingMetadata;
 
     return { answer: text, groundingMetadata };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // Handle specific error types
     if (error instanceof LLMError) {
