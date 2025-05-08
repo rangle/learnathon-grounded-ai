@@ -47,7 +47,7 @@ export async function generateAnswer(query: string): Promise<{ answer: string; g
 
     // Call generateText with the Google provider
     const { text, providerMetadata } = await generateText({
-      model: google('gemini-2.0-flash-001', {
+      model: google('gemini-2.5-flash-preview-04-17', {
         useSearchGrounding: true,
       }),
       prompt,

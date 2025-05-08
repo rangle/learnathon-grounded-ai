@@ -1,41 +1,65 @@
-'use client';
+"use client";
 
-import { useState, FormEvent } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { useState, FormEvent } from "react";
+import { GroundingDisplay } from "./components/grounding-display";
 
-// Define a more specific type for the grounding metadata
-type GroundingMetadata = {
-  groundingSnippets?: Array<{
-    url?: string;
-    content?: string;
-    title?: string;
-  }>;
-  searchQueries?: string[];
-  // Add other expected properties as needed
-};
+// Define the detailed structure for grounding metadata
+export interface SearchEntryPoint {
+  renderedContent: string;
+}
+
+export interface GroundingChunkWeb {
+  uri: string;
+  title: string;
+}
+
+export interface GroundingChunk {
+  web: GroundingChunkWeb;
+  // Potentially other types like 'retrieved_context'
+}
+
+export interface GroundingSupportSegment {
+  // startIndex and endIndex refer to the source document, not the final answer.
+  // We'll use 'text' for matching within the answer.
+  startIndex: number;
+  endIndex: number;
+  text: string;
+}
+
+export interface GroundingSupport {
+  segment: GroundingSupportSegment;
+  groundingChunkIndices: number[]; // Indices into the groundingChunks array
+}
+
+export interface GroundingMetadata {
+  webSearchQueries?: string[];
+  searchEntryPoint?: SearchEntryPoint;
+  groundingChunks?: GroundingChunk[];
+  groundingSupports?: GroundingSupport[];
+}
 
 export default function Home() {
-  const [query, setQuery] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [query, setQuery] = useState("");
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [grounding, setGrounding] = useState<GroundingMetadata | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!query.trim()) return;
 
     setLoading(true);
-    setError('');
-    setAnswer('');
+    setError("");
+    setAnswer("");
     setGrounding(null);
     setCurrentQuestion(query);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query }),
       });
       const data = await res.json();
@@ -47,16 +71,16 @@ export default function Home() {
       }
     } catch (error: unknown) {
       // Using the error parameter without referencing it directly
-      console.error('Error fetching answer:', error);
-      setError('An error occurred. Please try again.');
+      console.error("Error fetching answer:", error);
+      setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
-      setQuery(''); // Reset the input field after submission
+      setQuery(""); // Reset the input field after submission
     }
   };
 
   const handleClearInput = () => {
-    setQuery('');
+    setQuery("");
   };
 
   return (
@@ -109,7 +133,7 @@ export default function Home() {
                 type="submit"
                 disabled={loading}
                 className={`px-6 py-3 rounded-lg bg-primary-600 text-white font-medium hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all ${
-                  loading ? 'opacity-75 cursor-not-allowed' : ''
+                  loading ? "opacity-75 cursor-not-allowed" : ""
                 }`}
               >
                 {loading ? (
@@ -133,7 +157,7 @@ export default function Home() {
                     Processing...
                   </span>
                 ) : (
-                  'Ask'
+                  "Ask"
                 )}
               </button>
             </div>
@@ -174,26 +198,8 @@ export default function Home() {
           </div>
         )}
 
-        {answer && (
-          <div className="bg-white rounded-2xl shadow-soft p-6 mb-8 transition-all">
-            <h3 className="text-xl font-semibold text-primary-900 mb-4">
-              Answer
-            </h3>
-            <div className="text-primary-800 leading-relaxed prose prose-primary max-w-none">
-              <ReactMarkdown>{answer}</ReactMarkdown>
-            </div>
-          </div>
-        )}
-
-        {grounding && (
-          <div className="bg-primary-50 rounded-2xl p-6 border border-primary-200">
-            <h4 className="text-lg font-semibold text-primary-900 mb-4">
-              Grounding Metadata
-            </h4>
-            <pre className="bg-white p-4 rounded-lg overflow-auto text-sm text-primary-700">
-              {JSON.stringify(grounding, null, 2)}
-            </pre>
-          </div>
+        {(answer || grounding) && !loading && (
+          <GroundingDisplay answer={answer} metadata={grounding} />
         )}
       </div>
     </div>
